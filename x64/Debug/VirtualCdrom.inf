@@ -1,0 +1,80 @@
+;
+; VirtualCdrom.inf
+; Virtual DVD-ROM Driver Installation File
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=CDROM
+ClassGuid={4D36E965-E325-11CE-BFC1-08002BE10318}
+Provider=%ProviderName%
+CatalogFile=VirtualCdrom.cat
+DriverVer = 03/09/2026,22.16.8.601
+PnpLockdown=1
+
+[DestinationDirs]
+DefaultDestDir = 12
+VirtualCdrom_Device_CoInstaller_CopyFiles = 11
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+VirtualCdrom.sys  = 1,,
+;
+
+
+[Manufacturer]
+%ManufacturerName%=Standard,NTamd64
+
+[Standard.NTamd64]
+%VirtualCdrom.DeviceDesc%=VirtualCdrom_Device, Root\VirtualCdrom
+
+[VirtualCdrom_Device.NT]
+CopyFiles=Drivers_Dir
+
+[Drivers_Dir]
+VirtualCdrom.sys
+
+[VirtualCdrom_Device.NT.HW]
+AddReg=VirtualCdrom_AddReg
+
+[VirtualCdrom_AddReg]
+HKR,,DeviceCharacteristics,0x10001,0x0100
+HKR,,Security,,"D:P(A;;GA;;;BA)(A;;GA;;;SY)"
+
+[VirtualCdrom_Device.NT.Services]
+AddService = VirtualCdrom,%SPSVCINST_ASSOCSERVICE%, VirtualCdrom_Service_Inst
+
+[VirtualCdrom_Service_Inst]
+DisplayName    = %VirtualCdrom.SVCDESC%
+ServiceType    = 1
+StartType      = 3
+ErrorControl   = 1
+ServiceBinary  = %12%\VirtualCdrom.sys
+
+[VirtualCdrom_Device.NT.CoInstallers]
+AddReg=VirtualCdrom_Device_CoInstaller_AddReg
+CopyFiles=VirtualCdrom_Device_CoInstaller_CopyFiles
+
+[VirtualCdrom_Device_CoInstaller_AddReg]
+;
+
+
+[VirtualCdrom_Device_CoInstaller_CopyFiles]
+;
+
+
+[VirtualCdrom_Device.NT.Wdf]
+KmdfService =  VirtualCdrom, VirtualCdrom_wdfsect
+
+[VirtualCdrom_wdfsect]
+KmdfLibraryVersion = 1.15
+
+[Strings]
+SPSVCINST_ASSOCSERVICE= 0x00000002
+ProviderName = "Virtual CDROM Project"
+ManufacturerName = "Virtual CDROM Manufacturer"
+DiskName = "Virtual CDROM Installation Disk"
+VirtualCdrom.DeviceDesc = "Virtual DVD-ROM Drive"
+VirtualCdrom.SVCDESC = "Virtual CDROM Service"
