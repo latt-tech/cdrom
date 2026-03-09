@@ -809,14 +809,8 @@ VcdHandleScsiCommand(
                 startSector = (cdb[2] << 24) | (cdb[3] << 16) | (cdb[4] << 8) | cdb[5];
                 sectorCount = (USHORT)((cdb[6] << 24) | (cdb[7] << 16) | (cdb[8] << 8) | cdb[9]);
             } else {
-                startSector = (ULONG)((cdb->CDB16.LogicalBlock[0] << 56) |
-                                      (cdb->CDB16.LogicalBlock[1] << 48) |
-                                      (cdb->CDB16.LogicalBlock[2] << 40) |
-                                      (cdb->CDB16.LogicalBlock[3] << 32) |
-                                      (cdb->CDB16.LogicalBlock[4] << 24) |
-                                      (cdb->CDB16.LogicalBlock[5] << 16) |
-                                      (cdb->CDB16.LogicalBlock[6] << 8) |
-                                      cdb->CDB16.LogicalBlock[7]);
+                startSector = (ULONG)((cdb[2] << 56) | (cdb[3] << 48) | (cdb[4] << 40) | (cdb[5] << 32) |
+                                      (cdb[6] << 24) | (cdb[7] << 16) | (cdb[8] << 8) | cdb[9]);
                 sectorCount = (USHORT)((cdb->CDB16.TransferLength[0] << 24) |
                                        (cdb->CDB16.TransferLength[1] << 16) |
                                        (cdb->CDB16.TransferLength[2] << 8) |
