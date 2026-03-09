@@ -1,65 +1,6 @@
 ﻿  Building 'VirtualCdrom' with toolset 'WindowsKernelModeDriver10.0' and the 'Universal' target platform.
   Stamping x64\Debug\VirtualCdrom.inf
-  Stamping [Version] section with DriverVer=03/09/2026,22.16.8.601
-  VirtualCdrom.c
-D:\projects\cdrom\VirtualCdrom.c(147,23): error C4013: 'RtlDuplicateUnicodeString' 未定義; 假設 extern 傳回整數
-D:\projects\cdrom\VirtualCdrom.c(147,49): error C2065: 'RTL_DUPLICATE_UNICODE_STRING_NULL_TERMINATE': 未宣告的識別項
-D:\projects\cdrom\VirtualCdrom.c(810,46): error C2223: '->CDB12' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(811,46): error C2223: '->CDB12' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(812,46): error C2223: '->CDB12' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(813,45): error C2223: '->CDB12' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(815,45): error C2223: '->CDB16' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(816,45): error C2223: '->CDB16' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(817,45): error C2223: '->CDB16' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(818,45): error C2223: '->CDB16' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(819,45): error C2223: '->CDB16' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(820,45): error C2223: '->CDB16' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(821,45): error C2223: '->CDB16' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(822,44): error C2223: '->CDB16' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(823,46): error C2223: '->CDB16' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(824,46): error C2223: '->CDB16' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(825,46): error C2223: '->CDB16' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(826,45): error C2223: '->CDB16' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(861,14): error C2065: 'SCSIOP_PREVENT_ALLOW_MEDIUM_REMOVAL': 未宣告的識別項
-D:\projects\cdrom\VirtualCdrom.c(869,13): error C2223: '->CDB6GENERIC' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(861,14): error C2051: case 運算式不是常數
-D:\projects\cdrom\VirtualCdrom.c(984,5): error C2065: 'PMODE_CDROM_PAGE': 未宣告的識別項
-D:\projects\cdrom\VirtualCdrom.c(984,22): error C2146: 語法錯誤: 遺漏 ';' (在識別項 'cdromPage' 之前)
-D:\projects\cdrom\VirtualCdrom.c(984,22): error C2065: 'cdromPage': 未宣告的識別項
-D:\projects\cdrom\VirtualCdrom.c(990,63): error C2065: 'MODE_CDROM_PAGE': 未宣告的識別項
-D:\projects\cdrom\VirtualCdrom.c(996,73): error C2065: 'MODE_CDROM_PAGE': 未宣告的識別項
-D:\projects\cdrom\VirtualCdrom.c(1001,5): error C2065: 'cdromPage': 未宣告的識別項
-D:\projects\cdrom\VirtualCdrom.c(1001,18): error C2065: 'PMODE_CDROM_PAGE': 未宣告的識別項
-D:\projects\cdrom\VirtualCdrom.c(1001,18): error C2064: 詞彙不等於使用 0 引數的函式
-D:\projects\cdrom\VirtualCdrom.c(1002,5): error C2065: 'cdromPage': 未宣告的識別項
-D:\projects\cdrom\VirtualCdrom.c(1002,16): error C2223: '->PageCode' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(1003,5): error C2065: 'cdromPage': 未宣告的識別項
-D:\projects\cdrom\VirtualCdrom.c(1003,16): error C2223: '->PageLength' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(1003,36): error C2065: 'MODE_CDROM_PAGE': 未宣告的識別項
-D:\projects\cdrom\VirtualCdrom.c(1004,5): error C2065: 'cdromPage': 未宣告的識別項
-D:\projects\cdrom\VirtualCdrom.c(1004,16): error C2223: '->ErrorRecoveryFlags' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(1005,5): error C2065: 'cdromPage': 未宣告的識別項
-D:\projects\cdrom\VirtualCdrom.c(1005,16): error C2223: '->ReadRetryCount' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(1006,5): error C2065: 'cdromPage': 未宣告的識別項
-D:\projects\cdrom\VirtualCdrom.c(1006,16): error C2223: '->CorrectionSpan' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(1007,5): error C2065: 'cdromPage': 未宣告的識別項
-D:\projects\cdrom\VirtualCdrom.c(1007,16): error C2223: '->HeadOffsetCount' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(1008,5): error C2065: 'cdromPage': 未宣告的識別項
-D:\projects\cdrom\VirtualCdrom.c(1008,16): error C2223: '->DataStrobeOffsetCount' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(1009,5): error C2065: 'cdromPage': 未宣告的識別項
-D:\projects\cdrom\VirtualCdrom.c(1009,16): error C2223: '->Reserved2' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(1010,5): error C2065: 'cdromPage': 未宣告的識別項
-D:\projects\cdrom\VirtualCdrom.c(1010,16): error C2223: '->WriteRetryCount' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(1011,5): error C2065: 'cdromPage': 未宣告的識別項
-D:\projects\cdrom\VirtualCdrom.c(1011,16): error C2223: '->Reserved3' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(1012,5): error C2065: 'cdromPage': 未宣告的識別項
-D:\projects\cdrom\VirtualCdrom.c(1012,16): error C2223: '->RecoveryTimeLimit' 的左邊必須指向結構/等位
-D:\projects\cdrom\VirtualCdrom.c(1026,13): warning C4133: '=': 不相容的類型 - 從 'SCSI_INQUIRY_DATA *' 至 'PINQUIRYDATA'
-D:\projects\cdrom\VirtualCdrom.c(1040,14): error C2039: 'VendorUnique': 並非 '_INQUIRYDATA' 的成員
-      D:\Windows Kits\10\Include\10.0.26100.0\shared\scsi.h(2824,16):
-      請參閱 '_INQUIRYDATA' 的宣告
+  Stamping [Version] section with DriverVer=03/09/2026,22.35.55.520
+  VirtualCdrom.vcxproj -> D:\projects\cdrom\x64\Debug\VirtualCdrom.sys
+SIGNTASK : SignTool error : No file digest algorithm specified. Please specify the digest algorithm with the /fd flag. Using /fd SHA256 is recommended and more secure than SHA1. Calling signtool with /fd sha1 is equivalent to the previous behavior. In order to select the hash algorithm used in the signing certificate's signature, use the /fd certHash option.
   
-D:\projects\cdrom\VirtualCdrom.c(1064,33): error C2065: 'TOC_DATA_TRACK': 未宣告的識別項
-D:\projects\cdrom\VirtualCdrom.c(1064,50): error C2065: 'TOC_CONTROL_DATA_TRACK': 未宣告的識別項
-D:\projects\cdrom\VirtualCdrom.c(1073,33): error C2065: 'TOC_DATA_TRACK': 未宣告的識別項
-D:\projects\cdrom\VirtualCdrom.c(1073,50): error C2065: 'TOC_CONTROL_DATA_TRACK': 未宣告的識別項

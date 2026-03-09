@@ -144,10 +144,7 @@ VcdInitializeDevice(
     devExt->IsoFileObject = NULL;
     
     RtlInitUnicodeString(&isoPath, VCD_ISO_PATH);
-    NTSTATUS status = RtlCopyUnicodeString(&devExt->IsoFilePath, &isoPath);
-    if (!NT_SUCCESS(status)) {
-        return status;
-    }
+    RtlCopyUnicodeString(&devExt->IsoFilePath, &isoPath);
     
     KeInitializeSpinLock(&devExt->StateLock);
     KeInitializeTimer(&devExt->CheckTimer);
@@ -809,12 +806,8 @@ VcdHandleScsiCommand(
                 startSector = (cdb[2] << 24) | (cdb[3] << 16) | (cdb[4] << 8) | cdb[5];
                 sectorCount = (USHORT)((cdb[6] << 24) | (cdb[7] << 16) | (cdb[8] << 8) | cdb[9]);
             } else {
-                startSector = (ULONG)((cdb[2] << 56) | (cdb[3] << 48) | (cdb[4] << 40) | (cdb[5] << 32) |
-                                      (cdb[6] << 24) | (cdb[7] << 16) | (cdb[8] << 8) | cdb[9]);
-                sectorCount = (USHORT)((cdb->CDB16.TransferLength[0] << 24) |
-                                       (cdb->CDB16.TransferLength[1] << 16) |
-                                       (cdb->CDB16.TransferLength[2] << 8) |
-                                       cdb->CDB16.TransferLength[3]);
+                startSector = (ULONG)((cdb[2] << 24) | (cdb[3] << 16) | (cdb[4] << 8) | cdb[5]);
+                sectorCount = (USHORT)((cdb[10] << 24) | (cdb[11] << 16) | (cdb[12] << 8) | cdb[13]);
             }
             
             status = VcdHandleReadSectors(DevExt, startSector, sectorCount, dataBuffer, dataBufferLength);
@@ -849,7 +842,7 @@ VcdHandleScsiCommand(
             break;
         }
         
-        case SCSIOP_PREVENT_ALLOW_MEDIUM_REMOVAL:
+        case 0x1E: // SCSIOP_PREVENT_ALLOW_MEDIUM_REMOVAL
         {
             status = STATUS_SUCCESS;
             break;
@@ -857,7 +850,7 @@ VcdHandleScsiCommand(
         
         default:
         {
-            KdPrint(("VirtualCdrom: Unsupported SCSI command: 0x%02X\n", cdb->CDB6GENERIC.OperationCode));
+            KdPrint(("VirtualCdrom: Unsupported SCSI command: 0x%02X\n", operationCode));
             status = STATUS_INVALID_DEVICE_REQUEST;
             break;
         }
@@ -972,35 +965,27 @@ VcdHandleModeSense(
     _In_ ULONG BufferLength
 )
 {
-    PMODE_CDROM_PAGE cdromPage;
+    PVOID pageBuffer;
     
     PAGED_CODE();
     
     UNREFERENCED_PARAMETER(DevExt);
     
-    if (BufferLength < sizeof(MODE_PARAMETER_HEADER) + sizeof(MODE_CDROM_PAGE)) {
+    if (BufferLength < sizeof(MODE_PARAMETER_HEADER) + 12) {
         return STATUS_BUFFER_TOO_SMALL;
     }
     
     RtlZeroMemory(ModeBuffer, BufferLength);
     
-    ModeBuffer->ModeDataLength = sizeof(MODE_PARAMETER_HEADER) + sizeof(MODE_CDROM_PAGE) - 1;
+    ModeBuffer->ModeDataLength = sizeof(MODE_PARAMETER_HEADER) + 12 - 1;
     ModeBuffer->MediumType = 0;
     ModeBuffer->DeviceSpecificParameter = 0;
     ModeBuffer->BlockDescriptorLength = 0;
     
-    cdromPage = (PMODE_CDROM_PAGE)((PUCHAR)ModeBuffer + sizeof(MODE_PARAMETER_HEADER));
-    cdromPage->PageCode = MODE_PAGE_ERROR_RECOVERY;
-    cdromPage->PageLength = sizeof(MODE_CDROM_PAGE) - 2;
-    cdromPage->ErrorRecoveryFlags = 0;
-    cdromPage->ReadRetryCount = 0;
-    cdromPage->CorrectionSpan = 0;
-    cdromPage->HeadOffsetCount = 0;
-    cdromPage->DataStrobeOffsetCount = 0;
-    cdromPage->Reserved2 = 0;
-    cdromPage->WriteRetryCount = 0;
-    cdromPage->Reserved3 = 0;
-    cdromPage->RecoveryTimeLimit = 0;
+    pageBuffer = (PVOID)((PUCHAR)ModeBuffer + sizeof(MODE_PARAMETER_HEADER));
+    *((PUCHAR)pageBuffer + 0) = 0x01; // Error Recovery page
+    *((PUCHAR)pageBuffer + 1) = 10;   // Page length
+    RtlZeroMemory((PUCHAR)pageBuffer + 2, 10);
     
     return STATUS_SUCCESS;
 }
@@ -1010,30 +995,18 @@ VcdInitializeInquiryData(
     _In_ PVCD_DEVICE_EXTENSION DevExt
 )
 {
-    PINQUIRYDATA inquiry;
+    PUCHAR inquiry = (PUCHAR)&DevExt->InquiryData;
+    RtlZeroMemory(inquiry, sizeof(SCSI_INQUIRY_DATA));
     
-    PAGED_CODE();
+    // 填充标准INQUIRY数据
+    inquiry[0] = READ_ONLY_DIRECT_ACCESS_DEVICE; // Device Type
+    inquiry[1] = 0; // Device Type Qualifier
+    inquiry[7] = 31; // Additional Length
     
-    inquiry = &DevExt->InquiryData;
-    RtlZeroMemory(inquiry, sizeof(INQUIRYDATA));
-    
-    inquiry->DeviceType = READ_ONLY_DIRECT_ACCESS_DEVICE;
-    inquiry->DeviceTypeQualifier = DEVICE_CONNECTED;
-    inquiry->RemovableMedia = 1;
-    inquiry->CommandQueue = 0;
-    inquiry->SoftReset = 0;
-    inquiry->RelativeAddressing = 0;
-    inquiry->Wide32Bit = 0;
-    inquiry->Wide16Bit = 0;
-    inquiry->Synchronous = 0;
-    inquiry->LinkedCommands = 0;
-    inquiry->Reserved = 0;
-    inquiry->VendorUnique = 0;
-    inquiry->AdditionalLength = sizeof(INQUIRYDATA) - 5;
-    
-    RtlCopyMemory(inquiry->VendorId, "Virtual ", 8);
-    RtlCopyMemory(inquiry->ProductId, "DVD-ROM         ", 16);
-    RtlCopyMemory(inquiry->ProductRevisionLevel, "1.00", 4);
+    // 填充厂商信息
+    RtlCopyMemory(inquiry + 8, "Virtual ", 8);
+    RtlCopyMemory(inquiry + 16, "DVD-ROM         ", 16);
+    RtlCopyMemory(inquiry + 32, "1.00", 4);
 }
 
 VOID
@@ -1052,7 +1025,7 @@ VcdInitializeToc(
     toc->Length[1] = 0x1A;
     
     toc->TrackData[0].Reserved = 0;
-    toc->TrackData[0].Control = TOC_DATA_TRACK | TOC_CONTROL_DATA_TRACK;
+    toc->TrackData[0].Control = 0x41; // TOC_DATA_TRACK | TOC_CONTROL_DATA_TRACK
     toc->TrackData[0].TrackNumber = 1;
     toc->TrackData[0].Reserved1 = 0;
     toc->TrackData[0].Address[0] = 0;
@@ -1061,7 +1034,7 @@ VcdInitializeToc(
     toc->TrackData[0].Address[3] = 0;
     
     toc->TrackData[1].Reserved = 0;
-    toc->TrackData[1].Control = TOC_DATA_TRACK | TOC_CONTROL_DATA_TRACK;
+    toc->TrackData[1].Control = 0x41; // TOC_DATA_TRACK | TOC_CONTROL_DATA_TRACK
     toc->TrackData[1].TrackNumber = 0xAA;
     toc->TrackData[1].Reserved1 = 0;
     toc->TrackData[1].Address[0] = 0;
